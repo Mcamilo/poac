@@ -1,12 +1,14 @@
 from .config.synth_combinations import combinations_default_config
 from repliclust import set_seed, Archetype, DataGenerator
 import itertools
-import os
+from os.path import join, dirname, abspath, exists
+from os import makedirs
+
 import pandas as pd
 import random
 
-path_default = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data"
+path_default = join(
+    dirname(dirname(abspath(__file__))), "data/raw"
 )
 
 # TODO
@@ -14,14 +16,15 @@ path_default = os.path.join(
 
 
 class Synthesize:
-    def __init__(self, dir=path_default, config=combinations_default_config):
+    def __init__(self, sample_n=None, data_path=path_default, config=combinations_default_config):
         """Synthesize clustering problems
-        :param dir: Path to save the synthesized clustering problems
+        :param data_path: Path to save the synthesized clustering problems
         :param config: A config dict to synthesize different combinations of clustering problems
         """
         print("[Synthesize]>> Starting...")
-        self.PATH = dir
+        self.PATH = data_path
         self.combinations_config = config
+        self.sample_n = sample_n
         self._generate_combinations()
         self._synthesize_clustering_problems()
 
@@ -38,6 +41,8 @@ class Synthesize:
         """ Randomily picks values from the combinations dict for each Archetype parameter 
         """
         print("[Synthesize]>> Generating clustering problems...")
+        if self.sample_n:
+            self.combinations = self.combinations[:self.sample_n]
         for i, config in enumerate(self.combinations):
             set_seed(random.choice(range(1, 100)))
             print(f"[Synthesize]>> Config: {i}/{len(self.combinations)}")
@@ -69,9 +74,9 @@ class Synthesize:
             df["y"] = y
             file_name = f"dim{dim}-clusters{n_clusters}-instances{n_samples}-overlap{min_overlap}-{max_overlap}-aspectref{aspect_ref}-aspectmaxmin{aspect_maxmin}-radius{radius_maxmin}-imbalance{imbalance_ratio}.csv"
             # Create the output directory if it doesn't exist
-            if not os.path.exists(self.PATH):
-                os.makedirs(self.PATH)
-            output_path = os.path.join(self.PATH, file_name)
+            if not exists(self.PATH):
+                makedirs(self.PATH)
+            output_path = join(self.PATH, file_name)
 
             df.to_csv(output_path, index=False)
         print("[Synthesize]>> Done...")
