@@ -8,59 +8,55 @@ import warnings
 
 #from fcmeans import FCM
 import numpy as np
+from .config.path import path_clustering_problems, path_meta_features
 
-path_default = join(
-    dirname(dirname(abspath(__file__))), "data"
-)
 
 class FeatureSpace:
-    def __init__(self, data_path=path_default):
-        """ Extraction of MF and Populates the problem space"""
-        print("[Problem Space]>> Starting...")
+    def __init__(self):
+        """ Extraction of MF and Populates the Feature space"""
+        print("[Feature Space]>> Starting...")
         
-        self.raw_path = join(path_default, "raw")
-        self.stage_path = join(data_path, "stage")
+        self.clustering_problems = path_clustering_problems
+        self.stage_path = path_meta_features
+
         self._get_clustering_problems_data()
         self._mf_clustering_algos()
         
-        print("[Problem Space]>> Done...")
+        print("[Feature Space]>> Done...")
 
 
     def _get_clustering_problems_data(self):
-        print("[Problem Space]>> Listing clustering problems...")
-        self.onlyfiles = [f for f in listdir(self.raw_path) if isfile(join(self.raw_path, f))]
+        print("[Feature Space]>> Listing clustering problems...")
+        self.onlyfiles = [f for f in listdir(self.clustering_problems) if isfile(join(self.clustering_problems, f))]
         print("Total:"+str(len(self.onlyfiles)))
 
     def _mf_clustering_algos(self):
-        print("[Problem Space] Extracting Problem Space...")
+        print("[Feature Space] Extracting Feature Space...")
         for idx, file_name in enumerate(self.onlyfiles):
             print(str(idx), "/", str(len(self.onlyfiles)))
             print(file_name)
             
-            X = pd.read_csv(self.raw_path+"/"+file_name)
-
-            ####### Escalar os Valores?
+            file_path = join(path_clustering_problems, file_name)
+            X = pd.read_csv(file_path)
+    
             scaler = MinMaxScaler()
             X = scaler.fit_transform(X)
-            self._extract_meta_features(X,file_name)
-            self._populate_problem_space(file_name)
-            self._generate_meta_dataset()
+            """ Extract MF"""
+            mfe = MFE(groups="all", features=features)
+            output_path = self.stage_path
+            
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=UserWarning)  # Replace "Warning" with the specific warning you want to ignore
+                mfe.fit(X)
+                ft = mfe.extract()
+                ft[0].insert(0,"file_name")
+                ft[1].insert(0,file_name)
+                df = pd.DataFrame(columns=ft[0],data=[ft[1]])
+                
+                if not exists(output_path):
+                    makedirs(output_path)
+                
+                df.to_csv(join(output_path, file_name), index=False)
+            
 
-    def _extract_meta_features(self, dataset, file_name):
-        """ Extract MF"""
-        mfe = MFE(groups="all", features=features)
-        output_path = self.stage_path
         
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=UserWarning)  # Replace "Warning" with the specific warning you want to ignore
-            mfe.fit(dataset)
-            ft = mfe.extract()
-            df = pd.DataFrame(columns=ft[0],data=[ft[1]])
-            
-            if not exists(output_path):
-                makedirs(output_path)
-            
-            df.to_csv(join(output_path, file_name), index=False)
-
-    def _populate_problem_space(self, X, file_name):
-        pass

@@ -24,6 +24,7 @@ class ClusteringSimulation:
         self.onlyfiles = [f for f in listdir(path_clustering_problems) if isfile(join(path_clustering_problems, f))]
         print("Total:"+str(len(self.onlyfiles)))
 
+    # BUG - doesnt work when number of dims is 2
     def _algorithm_space(self):
         """ Produces random solutions from a list of clustering algorithms for the clustering problems 
         """
@@ -56,6 +57,6 @@ class ClusteringSimulation:
                 dbs = davies_bouldin_score (X, cluster_labels)
                 
                 datasets = ([file_name]+[type(c).__name__]+[np.round(sil, decimals=2)]+[np.round(dbs, decimals=2)]+[abs(rep-n_clusters)])
-                
+                print(f"[Clustering Simulation]>> {datasets}")
                 pd.DataFrame(datasets).T.to_csv(join(path_simulations,file_name), mode='a', index=False, header=False)
                 

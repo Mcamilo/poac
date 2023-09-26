@@ -12,8 +12,9 @@ if __name__ == "__main__":
     print(f"Starting time: {datetime.now()}")
     try:
         # ProblemSpace(sample_n=5)
-        ClusteringSimulation()
-        # Surrogate()
+        # ClusteringSimulation()
+        # FeatureSpace()
+        Surrogate()
         # TPOT()
     except Exception as e:
         print(e)
