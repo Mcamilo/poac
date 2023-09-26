@@ -1,7 +1,7 @@
 from datetime import datetime
-from surrogate.synthesize import Synthesize
-from surrogate.meta_features import MetaFeatures
 from surrogate.problem_space import ProblemSpace
+from surrogate.clustering_simulation import ClusteringSimulation
+from surrogate.meta_features import FeatureSpace
 from surrogate.surrogate import Surrogate
 # from optimization.tpot import Tpot
 
@@ -11,9 +11,8 @@ from surrogate.surrogate import Surrogate
 if __name__ == "__main__":
     print(f"Starting time: {datetime.now()}")
     try:
-        Synthesize(sample_n=5)
-        MetaFeatures()
-        # ProblemSpace()
+        # ProblemSpace(sample_n=5)
+        ClusteringSimulation()
         # Surrogate()
         # TPOT()
     except Exception as e:
