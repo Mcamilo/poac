@@ -3,6 +3,8 @@ from surrogate.problem_space import ProblemSpace
 from surrogate.clustering_simulation import ClusteringSimulation
 from surrogate.meta_features import FeatureSpace
 from surrogate.surrogate import Surrogate
+import warnings
+
 # from optimization.tpot import Tpot
 
 # TODO - Service to plot/analize data
@@ -11,10 +13,11 @@ from surrogate.surrogate import Surrogate
 if __name__ == "__main__":
     print(f"Starting time: {datetime.now()}")
     try:
+        warnings.simplefilter("ignore")
         # ProblemSpace(sample_n=5)
-        # ClusteringSimulation()
+        ClusteringSimulation()
         # FeatureSpace()
-        Surrogate()
+        # Surrogate()
         # TPOT()
     except Exception as e:
         print(e)

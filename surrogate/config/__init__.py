@@ -1,2 +1,2 @@
 from .synth_combinations import combinations_default_config
-from .meta_features import features
+from .meta_features import features, meta_features_names
