@@ -15,8 +15,8 @@ if __name__ == "__main__":
     try:
         warnings.simplefilter("ignore")
         # ProblemSpace(sample_n=5)
-        ClusteringSimulation()
-        # FeatureSpace()
+        # ClusteringSimulation()
+        FeatureSpace()
         # Surrogate()
         # TPOT()
     except Exception as e:
