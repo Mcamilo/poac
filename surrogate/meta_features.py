@@ -25,8 +25,8 @@ class FeatureSpace:
 
     def _get_clustering_problems_data(self):
         print("[Feature Space]>> Listing clustering problems...")
-        self.onlyfiles = [f for f in listdir(self.clustering_problems) if isfile(join(self.clustering_problems, f))]
-        print("Total:"+str(len(self.onlyfiles)))
+        self.clustering_problems = [f for f in listdir(self.clustering_problems) if isfile(join(self.clustering_problems, f))]
+        print("Total:"+str(len(self.clustering_problems)))
 
     def _mf_clustering_algos(self):
         print("[Feature Space]>> Extracting Feature Space...")
@@ -34,8 +34,8 @@ class FeatureSpace:
             # warnings.filterwarnings("ignore", category=[UserWarning, FutureWarning])
             warnings.simplefilter("ignore")
 
-            for idx, file_name in enumerate(self.onlyfiles):
-                    print(str(idx), "/", str(len(self.onlyfiles)))
+            for idx, file_name in enumerate(self.clustering_problems):
+                    print(str(idx), "/", str(len(self.clustering_problems)))
                     print(file_name)
                     
                     file_path = join(path_clustering_problems, file_name)
@@ -62,7 +62,7 @@ class FeatureSpace:
         print("[Feature Space]>> generating surrogate dataset...")
         simulations = self._merge_csv_files_in_directory(path_simulations)
         meta_features = self._merge_csv_files_in_directory(path_meta_features)        
-        simulations.columns = ['file_name','sil','dbs','cluster_diff','cluster_pred','clusters']
+        simulations.columns = ['file_name','sil','dbs','ari','cluster_diff','cluster_pred','clusters']
         meta_features.columns = meta_features_names
         
         merged_df = pd.merge(simulations, meta_features, on="file_name")
