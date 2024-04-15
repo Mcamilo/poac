@@ -2,8 +2,8 @@ from .config.synth_combinations import combinations_default_config
 from repliclust import set_seed, Archetype, DataGenerator
 import itertools
 from os.path import join, dirname, abspath, exists
-from os import makedirs
-
+from os import makedirs, rmdir
+from shutil import rmtree
 import pandas as pd
 import random
 
@@ -15,36 +15,45 @@ path_default = join(
 # substitute pandas for pyarrow
 
 class ProblemSpace:
-    def __init__(self, sample_n=None, data_path=path_default, config=combinations_default_config):
+    def __init__(self, data_path=path_default, config=combinations_default_config):
         """Synthesize clustering problems
         :param data_path: Path to save the synthesized clustering problems
         :param config: A config dict to synthesize different combinations of clustering problems
         """
-        print("[Synthesize]>> Starting...")
+        print("[ProblemSpace]>> Starting...")
         self.PATH = data_path
         self.combinations_config = config
-        self.sample_n = sample_n
-        self._generate_combinations()
-        self._synthesize_clustering_problems()
-
-    def _generate_combinations(self):
-        print("[Synthesize]>> Generating combinations...")
+        
+    # TODO - optimize this to only generate combinations as long as the n_samples
+    def __generate_combinations(self, sample_size=None):
+        print("[ProblemSpace]>> Generating combinations...")
         """Generates a dict with combinations of different ranges of parameters for the synthesis of data
         """
-        self.combinations = [
+        combinations = [
             {key: value for key, value in zip(self.combinations_config.keys(), combo)}
             for combo in itertools.product(*self.combinations_config.values())
         ]
+        
+        if sample_size:
+            combinations = combinations[:sample_size]
 
-    def _synthesize_clustering_problems(self):
+        return combinations
+
+    def synthesize_clustering_problems(self, sample_size=None, keep=False):
         """ Randomily picks values from the combinations dict for each Archetype parameter 
         """
-        print("[Synthesize]>> Generating clustering problems...")
-        if self.sample_n:
-            self.combinations = self.combinations[:self.sample_n]
-        for i, config in enumerate(self.combinations):
+        print("[ProblemSpace]>> Generating clustering problems...")
+        combinations = self.__generate_combinations(sample_size)
+        
+        if not keep:
+                rmtree(self.PATH)
+        
+        if not exists(self.PATH):
+                makedirs(self.PATH)
+        
+        for i, config in enumerate(combinations):
             set_seed(random.choice(range(1, 100)))
-            print(f"[Synthesize]>> Config: {i}/{len(self.combinations)}")
+            print(f"[ProblemSpace]>> Config: {i}/{len(combinations)}")
             dim = random.choice(config["dim"])
             n_clusters = random.choice(config["n_clusters"])
             n_samples = random.choice(config["n_samples"])
@@ -72,10 +81,8 @@ class ProblemSpace:
             df = pd.DataFrame(X, columns=[f"x{ind}" for ind in range(X.shape[1])])
             df["y"] = y
             file_name = f"dim{dim}-clusters{n_clusters}-instances{n_samples}-overlap{min_overlap}-{max_overlap}-aspectref{aspect_ref}-aspectmaxmin{aspect_maxmin}-radius{radius_maxmin}-imbalance{imbalance_ratio}.csv"
-            # Create the output directory if it doesn't exist
-            if not exists(self.PATH):
-                makedirs(self.PATH)
+            
             output_path = join(self.PATH, file_name)
 
             df.to_csv(output_path, index=False)
-        print("[Synthesize]>> Done...")
+        print("[ProblemSpace]>> Done...")

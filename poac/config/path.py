@@ -4,8 +4,8 @@ path_default = join(
     dirname(dirname(dirname(abspath(__file__)))), "data"
 )
 
-path_clustering_problems = join(path_default, "Sv5_b")
-# path_clustering_problems = join(path_default, "clustering_problems")
+# path_clustering_problems = join(path_default, "Sv5_b")
+path_clustering_problems = join(path_default, "clustering_problems")
 
 path_meta_dataset = join(path_default,"meta_dataset")
 path_simulations = join(join(path_default,"meta_dataset"), "simulations")

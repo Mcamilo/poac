@@ -12,19 +12,14 @@ import numpy as np
 class ClusteringSimulation:
     def __init__(self):
         """ Induces the Surrogate Model for the problem space"""
-        print("[Clustering Simulation]>> Listing clustering problems...")
-
         if not exists(path_simulations):
             makedirs(path_simulations)
         
-        self._get_clustering_problems_data()
-        self._algorithm_space()
-
     def _get_clustering_problems_data(self):
         print("[Clustering Simulation]>> Listing clustering problems...")
-        self.clustering_problems = [f for f in listdir(path_clustering_problems) if isfile(join(path_clustering_problems, f))]
-        print("Total:"+str(len(self.clustering_problems)))
-
+        clustering_problems = [f for f in listdir(path_clustering_problems) if isfile(join(path_clustering_problems, f))]
+        print("Total:"+str(len(clustering_problems)))
+        return clustering_problems
 
     def _add_noise_to_categorical_values(self, categorical_list, noise_level=0.1, categories=None):
         """
@@ -51,23 +46,21 @@ class ClusteringSimulation:
 
         return noisy_list
 
-    def _algorithm_space(self):
+    def algorithm_space(self, solutions_size=25, mean=0.5, std_dev=0.19):
         """ Produces random solutions from a list of clustering algorithms for the clustering problems 
         """
         print("[Clustering Simulation]>> Simulating solutions from algo list")
         scaler = MinMaxScaler()
-        num_values = 25
-        mean = 0.5
-        std_dev = 0.19
-        for idx, file_name in enumerate(self.clustering_problems):
-            print(str(idx), "/", str(len(self.clustering_problems)))
+        clustering_problems = self._get_clustering_problems_data()
+        for idx, file_name in enumerate(clustering_problems):
+            print(str(idx), "/", str(len(clustering_problems)))
             print(file_name)
             file_path = join(path_clustering_problems, file_name)
             data = pd.read_csv(file_path)
             labels_true = list(data['y'])
             X = scaler.fit_transform(data.drop('y',axis=1))
             n_clusters = int(file_name.split('-')[1].replace("clusters",""))
-            normal_values = np.random.normal(mean, std_dev, num_values)
+            normal_values = np.random.normal(mean, std_dev, solutions_size)
             solutions_output = join(path_simulations,file_name)
             if exists(solutions_output):
                 remove(solutions_output)
