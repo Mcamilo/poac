@@ -3,4 +3,6 @@ repliclust==0.0.3
 pandas==1.3.5
 yellowbrick==1.5
 pymfe==0.4.2
-scikit-learn-extra==latest
+scikit-learn==1.4.2
+joblib==1.2
+git+https://github.com/Mcamilo/tpot_clustering

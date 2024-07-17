@@ -1,10 +1,8 @@
 import pandas as pd
 from os import listdir, makedirs, remove
-from os.path import isfile, join, dirname, abspath, exists
+from os.path import isfile, join, exists
 from .config.path import path_clustering_problems, path_simulations, path_default
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.cluster import AgglomerativeClustering, KMeans, MiniBatchKMeans
-from sklearn_extra.cluster import KMedoids
 from sklearn.metrics import davies_bouldin_score, silhouette_score, adjusted_rand_score
 import random
 import numpy as np
@@ -81,7 +79,6 @@ class ClusteringSimulation:
                     rep = len(set(noisy_data))
                     
                     datasets.append([file_name,np.round(sil, decimals=2),np.round(dbs, decimals=2),np.round(ari, decimals=2),abs(rep-n_clusters),rep,n_clusters])
-                    # print(f"[Clustering Simulation]>> {datasets}")
                 except Exception as e:
                     print(f"{e} for >>>> {file_name}")
                     exit()

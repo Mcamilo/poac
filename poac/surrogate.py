@@ -5,6 +5,11 @@ from .meta_features import FeatureSpace
 from sklearn.ensemble import RandomForestRegressor
 from .config.meta_features import meta_features
 from .config.path import path_meta_dataset
+import warnings 
+from sklearn.metrics.cluster._unsupervised import (
+    davies_bouldin_score,
+    silhouette_score,
+)
 
 class Surrogate:
     def __init__(self):
@@ -32,3 +37,20 @@ class Surrogate:
         rf_regressor = RandomForestRegressor(random_state=seed, n_estimators=100, n_jobs=-1)
         rf_regressor.fit(x_train, y_train)
         return rf_regressor
+
+class SurrogateScorer:
+    def __init__(self, model, meta_features, cvi=[silhouette_score, davies_bouldin_score]) -> None:
+        self.model = model
+        self.meta_features = meta_features
+        self.cvi = cvi
+
+    def __call__(self, estimator, X):
+        try:
+            warnings.filterwarnings('ignore')
+            cluster_labels = estimator.fit_predict(X)
+            mf = self.meta_features.copy()
+            mf.extend([score(X,cluster_labels) for score in self.cvi])
+            surrogate_score = self.model.predict([mf])[0]
+            return surrogate_score if len(set(cluster_labels)) > 1 else -float('inf') 
+        except Exception as e:
+            raise TypeError(f"{e}")
