@@ -1,8 +1,8 @@
-Package information: [![Python 3.10](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
+Package information: [![Python 3.10](https://img.shields.io/badge/python-3.10.7-blue.svg)](https://www.python.org/downloads/release/python-3107/)
 [![License: LGPL v3](https://img.shields.io/badge/license-LGPL%20v3-blue.svg)](http://www.gnu.org/licenses/lgpl-3.0)
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/Mcamilo/poac/master/images/poac-logo.png" width=300 />
+<img src="https://raw.githubusercontent.com/Mcamilo/poac/master/images/poac-logo.png" width=800 />
 </p>
 
 
