@@ -5,4 +5,5 @@ yellowbrick==1.5
 pymfe==0.4.2
 scikit-learn==1.4.2
 joblib==1.2
+xgboost==2.1.0
 git+https://github.com/Mcamilo/tpot_clustering

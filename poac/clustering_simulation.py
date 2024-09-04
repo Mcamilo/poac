@@ -45,7 +45,7 @@ class ClusteringSimulation:
         return noisy_list
 
     def algorithm_space(self, solutions_size=25, mean=0.5, std_dev=0.19):
-        """ Produces random solutions from a list of clustering algorithms for the clustering problems 
+        """ Simulates clustering solutions by inserting multiple levels of noise into the original labels to create copies of increasily distorted partitionings
         """
         print("[Clustering Simulation]>> Simulating solutions from algo list")
         scaler = MinMaxScaler()
