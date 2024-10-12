@@ -91,18 +91,3 @@ We welcome contributions to PoAC! Please fork the repository, create a new branc
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Citation
-
-If you use PoAC in your research, please cite our paper:
-
-```
-@inproceedings{
-silva2024benchmarking,
-title={Benchmarking Auto{ML} Clustering Frameworks},
-author={Matheus Camilo da Silva and Biagio Licari and Gabriel Marques Tavares and Sylvio Barbon Junior},
-booktitle={AutoML Conference 2024 (ABCD Track)},
-year={2024},
-url={https://openreview.net/forum?id=RzUKJnph1g}
-}
-```
